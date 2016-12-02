@@ -1,0 +1,21 @@
+{
+  "name": "barista-watson",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "x",
+    "cfenv": "1.0.x",
+    "express": "4.13.x",
+    "fs": "0.0.1-security",
+    "request": "x",
+    "twitter": "x",
+    "watson-developer-cloud": "x"
+  },
+  "repository": {},
+  "engines": {
+    "node": "4.x"
+  }
+}

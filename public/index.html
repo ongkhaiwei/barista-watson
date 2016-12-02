@@ -1,0 +1,709 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="Ong Khai Wei">
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <title>Barista Watson</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="js/holder.js"></script>
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+    body {
+      padding-top: 50px;
+      padding-bottom: 50px;
+      background: url('images/background.JPG');
+      color: white;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    .navbar-bg {
+      background-color: rgba(50,50,50,0.5);
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+      /* Set the fixed height of the footer here */
+      background-color: rgba(85,150,230,0.8);
+      color: #FFFFFF;
+      padding: 10px 0px 10px 0px;
+    }
+    .footer > a {
+      color: inherit;
+      text-decoration: none;
+      font-size: 1.0em;
+    }
+
+    .container-bg {
+      background-color: rgba(255,255,255,0.5);
+    }
+
+    .content-margin {
+      margin-top:20px;
+      margin-bottom:10px;
+    }
+    .ask-watson-loader {
+      position: fixed;
+      top: 70px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+      /*background-color: #F2F2F2;*/
+    }
+    .loader-holder {
+      margin: -90px 0px 0px -60px;
+      top: 50%;
+      left: 50%;
+      position: absolute;
+    }
+
+    .loader-fallback {
+      display: none;
+      width: 160px;
+    }
+
+    .ie .loader-fallback {
+      display: inline;
+    }
+    .ie .loader-main {
+      display: none;
+    }
+
+    /*Welcome page*/
+
+    .welcome-flex {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex: 1;
+      flex: 1;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      /*background-color: #6854BF;*/
+      color: #FFFFFF;
+    }
+    .welcome-box {
+      margin: 100px auto;
+      width: 800px;
+      -ms-flex: 1;
+      flex: 1;
+    }
+    .message-welcome-container {
+      padding-bottom: 80px;
+    }
+    .message-welcome {
+      font-size: 24px;
+    }
+    .entity-input {
+      border-color: #FFFFFF;
+      border-top: 0;
+      border-right: 0;
+      border-left: 0;
+      border-bottom: 0;
+      background-color: transparent;
+      color: inherit;
+    }
+    .entity-input::-webkit-input-placeholder {
+      color: #ddd;
+    }
+    .welcome-search-field {
+      position: relative;
+      border-color: #FFFFFF;
+      border-bottom: 1px solid;
+    }
+    .welcome-search-field::-webkit-input-placeholder {
+      color: #B9B7F9;
+    }
+    .welcome-search-field span {
+      background: url("../images/search_icon_small.svg") no-repeat;
+      position: absolute;
+      top: 18px;
+      left: 10px;
+      width: 40px;
+      height: 50px;
+      background-size: contain;
+    }
+    .entity-input-welcome {
+      height: 80px;
+      font-size: 40px;
+      margin-left: 70px;
+      outline: none;
+    }
+    .tw_handler {
+      font-size: 16px;
+      font-style: bold;
+      display: inline-block;
+      padding: 8px 8px 8px 8px;
+      border: 3px solid #FFFFFF;
+      margin: 5px 5px 5px 5px;
+    }
+    .tw_handler:hover {
+      background-color: rgba(85,150,230,0.8);
+    }
+    .coffee_option {
+      font-style: bold;
+      display: inline-block;
+      padding: 4px 4px 4px 4px;
+      border: 2px solid #FFFFFF;
+      margin: 3px 3px 3px 3px;
+    }
+    .coffee_option:hover {
+      background-color: rgba(85,150,230,0.8);
+    }
+    .tone {
+      font-size: 24px;
+      border: 2px solid;
+      padding: 5px 5px 5px 5px;
+      margin: 5px 5px 5px 5px;
+    }
+    .tone {
+      font-size: 24px;
+      border: 2px solid;
+      padding: 5px 5px 5px 5px;
+      margin: 5px 5px 5px 5px;
+    }
+    .tone_red {
+      color: red;
+    }
+    .tone_purple {
+       color: purple;
+    }
+    .tone_green {
+      color: green;
+    }
+    .tone_yellow {
+      color: yellow;
+    }
+    .tone_blue {
+      color: blue;
+    }
+    .tone:hover {
+      color: white;
+    }
+    .tone_red:hover {
+      background-color: red;
+    }
+    .tone_purple:hover {
+       background-color: purple;
+    }
+    .tone_green:hover {
+      background-color: green;
+    }
+    .tone_yellow:hover {
+      background-color: yellow;
+    }
+    .tone_blue:hover {
+      background-color: blue;
+    }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <div id="watson-loader-container" class="ask-watson-loader">
+      <div class="loader-holder">
+        <img class="loader-main" src="images/loader.svg" alt="Loading Icon">
+        <img class="loader-fallback" src="images/loader.gif" alt="Loading Icon">
+      </div>
+    </div>
+
+    <nav id="navbar" style="display: none" class="navbar navbar-inverse navbar-fixed-top navbar-bg">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#"><strong>Barista Watson</strong> <span id="weather"></span></a>
+        </div>
+        <div id="navbar-reset" class="navbar-right">
+          <a class="navbar-brand" href="/">Reset</a>
+        </div>
+    </nav>
+
+    <div class="container" id="welcome-section" style="display: none;">
+      <div class="col-md-12" style="height: 75px">
+        <p></p>
+      </div>
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-8">
+        <div class="col-md-12">
+          <div class="message-welcome">Type in the name of your <strong>Twitter handler</strong> to discover what flavor of Coffee best fits your personality.</div>
+        </div>
+        <div class="col-md-12">
+          <div class="welcome-search-field">
+            <input type="text" id="twitter-id" class="entity-input entity-input-welcome" placeholder="twitter handler" maxlength="50"></input>
+            <span></span>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div id="tw_celebrity" style="padding: 20px; text-align: center">
+            <div id="leehsienloong" class="tw_handler">@leehsienloong</div>
+            <div id="realDonaldTrump" class="tw_handler">@realDonaldTrump</div>
+            <div id="taylorswift13" class="tw_handler">@taylorswift13</div>
+            <div id="Pontifex" class="tw_handler">@Pontifex</div>
+            <div id="mrbrown" class="tw_handler">@mrbrown</div>
+          </div>
+        </div>
+        <div class="col-md-12">
+            <div>
+              <span style="font-size: 20px; color: red;" id="twitter_error"></span>
+            </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+      </div>
+    </div>
+
+    <div style="display: none" class="container container-padding" id="result">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4 content-margin" style="text-align: center">
+          <img data-src="holder.js/200x200" id="profile-pic" class="img-thumbnail">
+          <br>
+          <div>
+            <h3><span id="age_gender"></span></h3>
+          </div>
+        </div>
+        
+        <div id="coffee-section" class="col-md-8 content-margin">
+          <div class="col-md-4 content-margin" style="text-align: center" id="coffee_image">
+          </div>
+          <div class="col-md-8 content-margin">
+            <p><span style="font-size: 18px" id="coffee_desc"></span></p>
+          </div>
+
+          <div id="choose_coffees" style="display: none; padding: 10px; text-align: center">
+            <p>Still want to stick to your favourite?</p>
+            <div id="choose_flatwhite" class="coffee_option">Flat White</div>
+            <div id="choose_latte" class="coffee_option">Latte</div>
+            <div id="choose_cappuccino" class="coffee_option">Cappuccino</div>
+            <div id="choose_black" class="coffee_option">Black</div>
+            <div id="choose_secret" class="coffee_option">&nbsp;<strong>?<strong>&nbsp;</div>
+          </div>
+        </div>
+        <div class="col-md-8 content-margin">
+          <p style="font-size: 30px; font-style: italic"><span id="quote"></span></p>
+          <p style="font-size: 20px; text-align: right"><strong><span id="author"></span></strong></p>
+        </div>
+        <div class="col-md-12 content-margin">
+          <p></p>
+        </div>
+        <div class="col-md-12 content-margin">
+          <p></p>
+        </div>
+        <div class="col-md-6 content-margin">
+          <h2><strong>Personality Insight</strong></h2>
+          
+          <div class="col-md-12 content-margin">
+            <div id="summary"></div>
+          </div>
+          <div class="col-md-12 container-bg content-margin">
+            <div id="sunburstChart"></div>
+          </div>
+        </div>
+        <div class="col-md-6 content-margin">
+         
+          <div class="col-md-12">
+            <h2><strong>Tone Analyzer<strong></h2>
+            <p>Emotion level of tweets</p>
+          </div>
+          <div class="col-md-8 tone tone_red">
+            <div class="col-md-6">Anger</div><div class="col-md-6" id="anger_score" style="text-align: right"></div>
+          </div>
+          <div class="col-md-8 tone tone_purple">
+            <div class="col-md-6">Disgust</div><div class="col-md-6" id="disgust_score" style="text-align: right"></div>
+          </div>
+          <div class="col-md-8 tone tone_green">
+            <div class="col-md-6">Fear</div><div class="col-md-6" id="fear_score" style="text-align: right"></div>
+          </div>
+          <div class="col-md-8 tone tone_yellow">
+            <div class="col-md-6">Joy</div><div class="col-md-6" id="joy_score" style="text-align: right"></div>
+          </div>
+          <div class="col-md-8 tone tone_blue">
+            <div class="col-md-6">Sadness</div><div class="col-md-6" id="sadness_score" style="text-align: right"></div>
+          </div>
+        </div> 
+      </div>
+    </div>
+    <footer style="text-align: center;" class="footer">
+      <a href="/tos">Terms and Conditions</a>
+        |
+        <a href="http://www.ibm.com/privacy/us/en/" target="_blank">Privacy Policy</a>
+        |
+        <a href="http://bluemix.net/" target="_blank">Powered by IBM Bluemix</a>
+    </footer>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+
+  </body>
+  <script src="js/d3.min.js"></script>
+  <script src="js/personality-sunburst-chart.standalone.min.js"></script>
+  <script src="js/personality-text-summary.standalone.js"></script>
+  <script type="text/javascript">
+    var user = {};
+    $(document).ready(function(){
+
+      $.ajax({
+        type: "GET",
+        url: "/weather",
+        dataType: "json",
+        success: function(data) {
+          console.log('weather data=' + JSON.stringify(data));
+          var str = " | " + data.temp + " &#8451; | " + data.wx_phrase;
+          $('#navbar').fadeIn();
+          $('#weather').html(str);
+          $('#watson-loader-container').hide();
+          $('#welcome-section').fadeIn();
+        },
+        error: function(err) {
+         console.log(err);
+        }
+    });
+
+    $('#leehsienloong').click(function(e) {
+      $("#twitter-id").val('leehsienloong');
+      processTwitter(); 
+    });
+    $('#realDonaldTrump').click(function(e) {
+      $("#twitter-id").val('realDonaldTrump');
+      processTwitter(); 
+    });
+    $('#taylorswift13').click(function(e) {
+      $("#twitter-id").val('taylorswift13');
+      processTwitter(); 
+    });
+    $('#Pontifex').click(function(e) {
+      $("#twitter-id").val('Pontifex');
+      processTwitter(); 
+    });
+    $('#mrbrown').click(function(e) {
+      $("#twitter-id").val('mrbrown');
+      processTwitter(); 
+    });
+
+    function processTwitter() {
+
+      $('#welcome-section').hide();
+
+        $('#watson-loader-container').fadeIn();
+        var name = $("#twitter-id").val();
+
+        $.ajax({
+          type: "GET",
+          url: "/twitter?screen_name="+name,
+          success: function(data) {
+            var tw = data.tweets.reduce(function(a,b){
+                return a+(a.length > 0 ? ". ":"")+ b.text;
+            }, "");
+            user.posts = tw;
+            user.profpic = data.user.profile_image_url.replace("normal","200x200");
+           // $("#profile-pic").attr("da-a=src", "");
+            $("#profile-pic").attr("src", user.profpic);
+            analyzeProfilePic(user.profpic, tw);
+          },
+          error: function(err) {
+            $('#welcome-section').fadeIn()
+            $('#watson-loader-container').hide();
+            $('#twitter_error').html('Twitter handler is not found').fadeIn();
+          }
+        });
+
+    }
+  
+    $('#twitter-id').keypress(function(e) {
+      if(e.which == 13) {
+        processTwitter();
+      }
+    });
+
+    function analyzeProfilePic(url, posts) {
+      $.post("http://gateway-a.watsonplatform.net/calls/url/URLGetRankedImageFaceTags",
+      {
+        apikey: "e315194c2a80331a56fcde072b41b77fad0e54d4",
+        outputMode: "json",
+        url: url
+      }, function (response) {
+        if (response.imageFaces && response.imageFaces.length > 0) {
+          var face = response.imageFaces[0];
+          if (!user.age && face.age) {
+              var age;
+              if (face.age.ageRange.indexOf("-") >= 0) {
+                  var ageRange = face.age.ageRange.split("-");
+                  age = (parseInt(ageRange[0]) + parseInt(ageRange[1])) / 2;
+              }
+              else if (face.age.ageRange.indexOf("<") >= 0) age = parseInt(face.age.ageRange.replace("<", ""));
+              else if (face.age.ageRange.indexOf(">") >= 0) age = parseInt(face.age.ageRange.replace(">", ""));
+              user.age = age;
+          }
+          if (!user.gender && face.gender) {
+              user.gender = face.gender.gender;
+          }
+          user.visual = face;
+          $('#age_gender').html(user.age + " (Estimated)" + "<br/>" + user.gender + " (Analyzed)");
+          analyzePosts(posts);
+          analyzeTone(posts); 
+        }
+      });
+    }
+
+    function assembleTextSummary(text) {
+      return '<p class="base--p">' + text.split('\n').join('</p><p class="base--p">') + '</p>';
+    }
+    
+    function updatePersonality(key, pct) {
+      pct = Math.round(pct);
+      //if (!title) title = key;
+      user.psycho[key] = pct;
+      //$("#chart-" + key + "-title").html(title);
+      //$("#chart-" + key + "-pct").html(pct);
+      //$("#chart-" + key).data('easyPieChart').update(pct)
+    }
+
+    function analyzePsycho() {
+      //console.log('Adventurousness='+ user.psycho.Adventurousness + ",Challenge=" + user.psycho.Challenge + ",Achievement="+user.psycho.Achievement);
+      if (user.psycho.Adventurousness >= 75 && user.psycho.Challenge > 50) {
+        user.psycho = "adventurer";
+      } else if (user.psycho.Adventurousness > 50 && user.psycho.Achievement > 50){
+        user.psycho = "achiever";
+      } else {
+        user.psycho = "other";
+      }
+
+    }
+
+    function analyzePosts(posts) {
+      $.ajax ({
+        type: "POST",
+        url: '/analyze',
+        dataType: 'json',
+        async: false,
+        //json object to sent to the authentication url
+        data: {content: posts},
+        success: function (response) {
+            user.personality = response;
+            user.psycho = {};
+            setTimeout(function () {
+              updatePersonality("Adventurousness", 100 * user.personality.tree.children[0].children[0].children[0].children[0].percentage);
+              updatePersonality("Artistic", 100 * user.personality.tree.children[0].children[0].children[0].children[1].percentage);
+              updatePersonality("Achievement", 100 * user.personality.tree.children[0].children[0].children[1].children[0].percentage);
+              updatePersonality("Orderliness", 100 * user.personality.tree.children[0].children[0].children[1].children[3].percentage);
+              updatePersonality("Emotional", 100 * user.personality.tree.children[0].children[0].children[4].percentage);
+              updatePersonality("Challenge", 100 * user.personality.tree.children[1].children[0].children[0].percentage);
+
+              var profile = response;
+              var imageUrl = "https://personality-insights-livedemo.mybluemix.net/images/service-icon.svg";
+              var chart = new PersonalitySunburstChart('sunburstChart');
+              chart.show(profile, imageUrl);
+              var textSummary = new TextSummary("en-US"),
+              summary = textSummary.getSummary(response);
+              
+              $('#watson-loader-container').hide();
+              $('#summary').html(assembleTextSummary(summary));
+
+              setTimeout(function () {
+                analyzePsycho();
+                user.coffee = chooseCoffee();
+                showCoffee(user.coffee);
+                
+              }, 500);
+            }, 500);
+        }
+           
+      });
+    }
+
+    function showCoffee(user_coffee) {
+      $('#coffee_image').html('<img src="'+ user_coffee.pic +'" />');
+      var spinelli = "Please show this Barista to <strong>Spinelli</strong> counter to redeem your favourite coffee.";
+      if (user_coffee.name === "Secret") { // secret
+        spinelli = "Please show this to Barista at <strong>Spinelli</strong> to redeem this secret coffee!";
+      } else {
+        $('#choose_coffees').show();
+      }
+
+      $('#coffee_desc').html('<p style="font-size: 19px">'+user_coffee.desc+'</p><p>'+spinelli+'</p>');
+      $('#coffee-section').fadeIn();
+      $('#result').fadeIn();
+    }
+
+    $('#choose_flatwhite').click(function(e) {
+      var new_user_coffee = coffees["flatwhite"];
+      $('#coffee-section').hide();
+      showCoffee(new_user_coffee);
+    });
+    $('#choose_latte').click(function(e) {
+      var new_user_coffee = coffees["latte"];
+      $('#coffee-section').hide();
+      showCoffee(new_user_coffee);
+    });
+    $('#choose_cappuccino').click(function(e) {
+      var new_user_coffee = coffees["cappuccino"];
+      $('#coffee-section').hide();
+      showCoffee(new_user_coffee);
+    });
+    $('#choose_black').click(function(e) {
+      var new_user_coffee = coffees["black"];
+      $('#coffee-section').hide();
+      showCoffee(new_user_coffee);
+    });
+    $('#choose_secret').click(function(e) {
+      var new_user_coffee = coffees["secret"];
+      $('#coffee-section').hide();
+      showCoffee(new_user_coffee);
+    });
+    
+
+    function analyzeTone(posts) {
+
+      $.ajax ({
+        type: "POST",
+        url: '/quotes',
+        dataType: 'json',
+        async: false,
+        //json object to sent to the authentication url
+        data: {content: posts},
+        success: function (response) {
+          $('#quote').html(response.quote);
+          $('#author').html(response.author);
+          showTone(response);
+        }
+      });
+    }
+
+    function showTone(response) {
+
+      $('#anger_score').html(response.tones[0].tones[0].score.toFixed(2));
+      $('#disgust_score').html(response.tones[0].tones[1].score.toFixed(2));
+      $('#fear_score').html(response.tones[0].tones[2].score.toFixed(2));
+      $('#joy_score').html(response.tones[0].tones[3].score.toFixed(2));
+      $('#sadness_score').html(response.tones[0].tones[4].score.toFixed(2));
+      
+    }
+
+    var coffees = {
+      "black": {
+        name: "Black Coffee",
+        desc: "Shots of espresso and filtered hot water.",
+        link: "",
+        pic: "images/black.png"
+      },
+      "latte": {
+        name: "Latte",
+        desc: "A shot of espresso in steamed milk lightly topped with foam.",
+        link: "",
+        pic: "images/latte.png"
+      },
+      "flatwhite": {
+        name: "Flat White",
+        desc: "Sweet espresso shots finished with steamed whole milk.",
+        link: "",
+        pic: "images/flatwhite.png"
+      },
+      "cappuccino": {
+        name: "Cappuccino",
+        desc: "A shot of espresso topped with a deep layer of foam milk.",
+        link: "",
+        pic: "images/cappuccino.png"
+      },
+      "secret": {
+        name: "Secret",
+        desc: "You're adventurous and challenge-seeking! Barista Watson offers a \"secret\" drink that is mind-blowing!",
+        link: "",
+        pic: "images/secret.png"
+      }
+    }
+
+    function chooseCoffee() {
+      if (user.age <= 30) {
+        if (user.gender == "male") {
+          if (user.psycho === "adventurer") {
+              return coffees["secret"];
+            } else if (user.psycho === "achiever") {
+              return coffees["cappuccino"];
+            } else {
+              return coffees["latte"];
+            }
+        } else { // Female
+          if (user.psycho === "adventurer") {
+              return coffees["secret"];
+            } else if (user.psycho === "achiever") {
+              return coffees["flatwhite"];
+            } else {
+              return coffees["latte"];
+            }
+        }
+      }
+      else if (user.age > 30 && user.age <= 40) {
+          if (user.gender == "male") {
+            if (user.psycho === "adventurer") {
+              return coffees["secret"];
+            } else if (user.psycho === "achiever") {
+              return coffees["cappuccino"];
+            } else {
+              return coffees["black"];
+            }
+          } else { // Female
+            if (user.psycho === "adventurer") {
+              return coffees["secret"];
+            } else if (user.psycho === "achiever") {
+              return coffees["flatwhite"];
+            } else {
+              return coffees["latte"];
+            }
+          }
+      }
+      else if (user.age > 40) {
+          if (user.gender == "male") {
+            if (user.psycho === "adventurer") {
+              return coffees["secret"];
+            } else if (user.psycho === "achiever") {
+              return coffees["cappuccino"];
+            } else {
+              return coffees["black"];
+            }
+          }
+          else { // Female
+            if (user.psycho === "adventurer") {
+              return coffees["secret"];
+            } else if (user.psycho === "achiever") {
+              return coffees["flatwhite"];
+            } else {
+              return coffees["black"];
+            }
+          }
+      } else { //
+          if (user.psycho === "adventurer") {
+              return coffees["secret"];
+            } else if (user.psycho === "achiever") {
+              return coffees["latte"];
+            } else {
+              return coffees["black"];
+            }
+      }
+
+    }
+
+  });
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-316347-9', 'auto');
+  ga('send', 'pageview');
+
+  </script>
+</html>
